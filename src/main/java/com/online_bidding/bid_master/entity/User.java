@@ -2,6 +2,8 @@ package com.online_bidding.bid_master.entity;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 
@@ -22,11 +24,16 @@ public class User {
 
     private String fullName;
 
+    @Email
+    @NotBlank
     @Column(unique = true, nullable = false)
     private String email;
 
+    @NotBlank
     private String password;
+    @NotBlank
     private String phoneNumber;
+    @NotBlank
     private String address;
 
     @Enumerated(EnumType.STRING)
