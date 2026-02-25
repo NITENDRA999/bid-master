@@ -1,7 +1,6 @@
 package com.online_bidding.bid_master.config;
 
 import com.online_bidding.bid_master.security.JwtAuthenticationFilter;
-import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +28,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth ->auth
                         .requestMatchers("/api/users/register","/api/users/login").permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore( jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

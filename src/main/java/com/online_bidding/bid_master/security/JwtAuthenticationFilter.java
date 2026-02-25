@@ -1,5 +1,7 @@
 package com.online_bidding.bid_master.security;
 
+import com.online_bidding.bid_master.entity.User;
+import com.online_bidding.bid_master.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,7 +16,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -22,6 +23,7 @@ import java.util.List;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+    private final UserRepository userRepository;
 
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -38,9 +40,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String email = jwtService.extractEmail(token);
 
             if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){
+
+                User user = userRepository.findByEmail(email)
+                        .orElseThrow(()->new RuntimeException("user not found"));
+
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        email, null, List.of(new SimpleGrantedAuthority("ROLE_USER"))
+                        email, null, List.of(new SimpleGrantedAuthority("ROLE_"+user.getRole().name()))
                 );
+
                 authentication.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
