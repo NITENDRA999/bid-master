@@ -20,4 +20,7 @@ public class AuctionResponseDTO {
     private String status;
     private String categoryName;
     private String sellerName;
+    private String winnerName;
+    private long remainingSeconds;
+    private boolean expired;
 }

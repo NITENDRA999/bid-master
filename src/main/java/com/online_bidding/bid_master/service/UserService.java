@@ -4,6 +4,7 @@ import com.online_bidding.bid_master.dto.UserResponseDTO;
 import com.online_bidding.bid_master.entity.AccountStatus;
 import com.online_bidding.bid_master.entity.Role;
 import com.online_bidding.bid_master.entity.User;
+import com.online_bidding.bid_master.exception.UserNotFoundException;
 import com.online_bidding.bid_master.repository.UserRepository;
 import com.online_bidding.bid_master.security.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class UserService {
 
     public String login(String email, String password){
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("user not fount"));
+                .orElseThrow(() -> new UserNotFoundException("user not fount"));
         if(!passwordEncoder.matches(password, user.getPassword())){
             throw new RuntimeException("invalid password");
         }

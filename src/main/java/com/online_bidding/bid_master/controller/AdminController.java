@@ -1,26 +1,31 @@
 package com.online_bidding.bid_master.controller;
 
-import com.online_bidding.bid_master.entity.Auction;
-import com.online_bidding.bid_master.entity.AuctionStatus;
-import com.online_bidding.bid_master.repository.AuctionRepository;
+import com.online_bidding.bid_master.dto.AuctionResponseDTO;
+import com.online_bidding.bid_master.service.AdminService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminController {
-    private final AuctionRepository auctionRepository;
+
+    private final AdminService adminService;
+
+    @GetMapping("/pending-auctions")
+    public List<AuctionResponseDTO> getPendingAuctions() {
+        return adminService.getPendingAuctions();
+    }
 
     @PutMapping("/approve/{auctionId}")
     public String approveAuction(@PathVariable Long auctionId){
-        Auction auction = auctionRepository.findById(auctionId)
-                .orElseThrow(()->new RuntimeException("Auction not found"));
-        auction.setStatus(AuctionStatus.ACTIVE);
-        auctionRepository.save(auction);
-        return "Auction approved successfully";
+        return adminService.approveAuction(auctionId);
+    }
+
+    @PutMapping("/reject/{auctionId}")
+    public String rejectAuction(@PathVariable Long auctionId) {
+        return adminService.rejectAuction(auctionId);
     }
 }

@@ -39,4 +39,8 @@ public class Auction {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "winner_id")
+    private User winner;
 }
